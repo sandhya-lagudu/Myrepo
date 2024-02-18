@@ -1,1 +1,30 @@
-My repository
+<tbody>
+            {
+              arr.map((prob)=>{
+                return(
+                <tr className="h-20" data-index={id}>
+              <td className="border border-slate-300">1 </td>
+              <td className="border border-slate-300">{prob.Title}</td>
+              <td className="border border-slate-300">{prob.Difficulty}</td>
+            </tr>
+              )})
+            }
+          </tbody>
+
+
+
+<tr>
+              <th scope="row" class="border-collapse border border-slate-400">Dennis</th>
+              <td class="border-collapse border border-slate-400">Web accessibility</td>
+              <td class="border-collapse border border-slate-400">45</td>
+            </tr>
+            <tr>
+              <th scope="row" class="border-collapse border border-slate-400">Sarah</th>
+              <td class="border-collapse border border-slate-400">JavaScript frameworks</td>
+              <td class="border-collapse border border-slate-400">29</td>
+            </tr>
+            <tr>
+              <th scope="row" class="border-collapse border border-slate-400">Karen</th>
+              <td class="border-collapse border border-slate-400">Web performance</td>
+              <td class="border-collapse border border-slate-400">36</td>
+            </tr>
