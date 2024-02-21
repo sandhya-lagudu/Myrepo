@@ -11,10 +11,12 @@ const Problem=require("./model/Problem");
 const Solution=require("./model/Solution");
 const {generateFile} = require("./generateFile");
 const {executeCpp}=require("./executeCpp.js");
+const cors=require("cors");
 
 //middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+app.use(cors());
 
 DBConnection();
 
@@ -58,11 +60,11 @@ app.post("/register",async(req,res)=>{
     });
 
     //generate a jwt token for user and send it
-    const token=jwt.sign({id:userData._id,email},process.env.SECRET_KEY,{
-        expiresIn:'1h'
-    });
+    // const token=jwt.sign({id:userData._id,email},process.env.SECRET_KEY,{
+    //     expiresIn:'1h'
+    // });
 
-    userData.token=token;
+    // userData.token=token;
     userData.password=undefined;
     res.status(200).json({
         message:"You have registered successfully",
@@ -98,24 +100,25 @@ app.post("/login",async(req,res)=>{
         }
 
         //create the jwt token
-        const token=jwt.sign({id:user._id,email},process.env.SECRET_KEY,{
-            expiresIn:'1h'
-        });
-        user.token=token;
+        // const token=jwt.sign({id:user._id,email},process.env.SECRET_KEY,{
+        //     expiresIn:'1h'
+        // });
+        // user.token=token;
         user.password=undefined;
         
         //store cookies into browser
-        const options={
-            expires:new Date(Date.now()+1*24*60*60*1000),
-            httpOnly:true,//only manipulate by server not by client or frontend or user
-        };
+        // const options={
+        //     expires:new Date(Date.now()+1*24*60*60*1000),
+        //     httpOnly:true,//only manipulate by server not by client or frontend or user
+        // };
 
         //send the token
-        res.status(200).cookie("token",token,options).json({
-            message:"You have successfully loggedIn",
-            success:true,
-            token
-        });
+        // res.status(200).cookie("token",token,options).json({
+        //     message:"You have successfully loggedIn",
+        //     success:true,
+        //     token
+        // });
+        res.status(200).send("Good");
 
     } catch (error) {
         console.log("Error :",error.message);
