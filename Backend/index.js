@@ -11,6 +11,7 @@ const Problem=require("./model/Problem");
 const Solution=require("./model/Solution");
 const {generateFile} = require("./generateFile");
 const {executeCpp}=require("./executeCpp.js");
+const {generateInpFile} = require("./generateInpFile.js");
 const cors=require("cors");
 
 //middlewares
@@ -153,29 +154,51 @@ app.get("/problemList",async(req,res)=>{
        if(!problems){
         res.status(200).send("no problems in DB");
        }
-       res.status(200).json(problems);
+       res.status(200).json({problems});
     //    res.status(200).send("Problems have loaded");
     } catch (error) {
         console.log("Error in problemlist:",error.message);
     }
 });
 
-app.get("/viewProblem/:uid/:probId",async(req,res)=>{
+app.get("/viewProblem/:probId",async(req,res)=>{
     // console.log({reqparam:req.params});
     try {
         const problem=await Problem.findById(req.params.probId);
         if(!problem){
             res.status(200).send("No problem exists!");
         }
-        res.status(200).send(problem);
+        res.status(200).json({problem});
+    } catch (error) {
+        res.status(404).send("Some probs");
+        console.log("Error in problem:",error.message);
+    }
+});
+
+//to run 
+app.post("/viewProblem/:probId/run",async(req,res)=>{
+    try {
+        // const uid=req.params.uid;
+        const probId=req.params.probId;
+        const {lang,sol,inp} = req.body;
+        if(!(lang && sol && inp)){
+            return res.status(400).send("Solution is not being compiled");
+        }
+        const filePath = await generateFile(lang,sol);
+        const inputFilePath = await generateInpFile(inp);
+        const output = await executeCpp(filePath,inputFilePath);
+        res.status(200).json({output});
+        // res.status(200).send("Run solution successfully");
     } catch (error) {
         console.log("Error in problem:",error.message);
     }
 });
 
-app.post("/viewProblem/:uid/:probId/run",async(req,res)=>{
+
+//to submit
+app.post("/viewProblem/:probId/submit",async(req,res)=>{
     try {
-        const uid=req.params.uid;
+        // const uid=req.params.uid;
         const probId=req.params.probId;
         const {lang,sol,verdict} = req.body;
         if(!(lang && sol && verdict)){
