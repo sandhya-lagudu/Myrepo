@@ -13,11 +13,12 @@ const {generateFile} = require("./generateFile");
 const {executeCpp}=require("./executeCpp.js");
 const {generateInpFile} = require("./generateInpFile.js");
 const cors=require("cors");
+const { ObjectId } = require("mongodb");
 
 //middlewares
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-app.use(cors());
 
 DBConnection();
 
@@ -25,9 +26,6 @@ app.get("/",(req,res)=>{
     res.send("welcome");
 });
 
-/*app.get("/home",(req,res)=>{
-    res.send("This is home");
-});*/
 
 app.post("/register",async(req,res)=>{
     
@@ -60,7 +58,7 @@ app.post("/register",async(req,res)=>{
         password:hashedpassword
     });
 
-    //generate a jwt token for user and send it
+    // generate a jwt token for user and send it
     // const token=jwt.sign({id:userData._id,email},process.env.SECRET_KEY,{
     //     expiresIn:'1h'
     // });
@@ -81,23 +79,23 @@ app.post("/login",async(req,res)=>{
     try {
         
         //get all data from frontend
-        const { email, password } = req.body;
+        const { userName, password } = req.body;
 
         //validate all the data - check all data is entered or not
-        if(!( email && password )){
-            return res.status(200).send("Enter all data");
+        if(!( userName && password )){
+            return res.status(400).send("Enter all data");
         }
 
         //check if user already exists or not in database
-        const user = await User.findOne({email});
+        const user = await User.findOne({userName});
         if (!user) {
-            return res.status(200).send("User doesn't exist!");
+            return res.status(400).send("User doesn't exist!");
         }
 
         //match the password
         const checkPassword = await bcrypt.compare(password,user.password);
         if(!checkPassword){
-            return res.status(200).send("The password is incorrect!");
+            return res.status(400).send("The password is incorrect!");
         }
 
         //create the jwt token
@@ -119,7 +117,11 @@ app.post("/login",async(req,res)=>{
         //     success:true,
         //     token
         // });
-        res.status(200).send("Good");
+        console.log("User exists!");
+        res.status(200).json({
+            message:"Good",
+            user
+        });
 
     } catch (error) {
         console.log("Error :",error.message);
@@ -161,33 +163,19 @@ app.get("/problemList",async(req,res)=>{
     }
 });
 
-app.get("/viewProblem/:probId",async(req,res)=>{
-    // console.log({reqparam:req.params});
-    try {
-        const problem=await Problem.findById(req.params.probId);
-        if(!problem){
-            res.status(200).send("No problem exists!");
-        }
-        res.status(200).json({problem});
-    } catch (error) {
-        res.status(404).send("Some probs");
-        console.log("Error in problem:",error.message);
-    }
-});
 
 //to run 
 app.post("/viewProblem/:probId/run",async(req,res)=>{
     try {
-        // const uid=req.params.uid;
         const probId=req.params.probId;
-        const {lang,sol,inp} = req.body;
-        if(!(lang && sol && inp)){
+        const {lang,code,inp} = req.body;
+        if(!(lang && code && inp)){
             return res.status(400).send("Solution is not being compiled");
         }
-        const filePath = await generateFile(lang,sol);
-        const inputFilePath = await generateInpFile(inp);
+        const filePath = await generateFile(lang,code);
+       const inputFilePath = await generateInpFile(inp);
         const output = await executeCpp(filePath,inputFilePath);
-        res.status(200).json({output});
+        res.json({output});
         // res.status(200).send("Run solution successfully");
     } catch (error) {
         console.log("Error in problem:",error.message);
@@ -198,27 +186,36 @@ app.post("/viewProblem/:probId/run",async(req,res)=>{
 //to submit
 app.post("/viewProblem/:probId/submit",async(req,res)=>{
     try {
-        // const uid=req.params.uid;
         const probId=req.params.probId;
-        const {lang,sol,verdict} = req.body;
-        if(!(lang && sol && verdict)){
-            return res.status(200).send("Solution not saved in DB successfully!");
+        const {lang,code} = req.body;
+        if(!(lang && code)){
+            return res.status(400).send("Solution is not being compiled");
         }
-        /*const solution = await Solution.create({
-            uid,
-            probId,
-            lang,
-            sol,
-            verdict
-        });*/
-        const filePath = await generateFile(lang,sol);
-        const output = await executeCpp(filePath);
-        res.status(200).json({filePath,output});
+        const isProblemExists=await Problem.findById(probId);
+        // console.log(isProblemExists.title);
+        const testcaseArray=isProblemExists.testcases;
+        const l=testcaseArray.length;
+        var i;
+        var verdict="Solution worked on 100% testcases";
+        for(i=0;i<l;i++){
+            const filePath = await generateFile(lang,code);
+            const inputFilePath = await generateInpFile(testcaseArray[i].input);
+            const output = await executeCpp(filePath,inputFilePath);
+            const dbOutput=testcaseArray[i].output;
+            console.log(output);
+            if(output!=dbOutput){
+                verdict="Solution is incorrect";
+            }
+        }
+        // console.log(verdict);
+        res.json({verdict});
         // res.status(200).send("Run solution successfully");
     } catch (error) {
         console.log("Error in problem:",error.message);
     }
 });
+
+
 
 
 

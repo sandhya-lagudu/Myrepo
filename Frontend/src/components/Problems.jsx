@@ -16,8 +16,8 @@ export function Problems() {
     const getQuesList = async event => {
       await Axios.get("http://localhost:8080/problemList")
       .then(async res => {
-        const jsonRes=await res.json;
-        console.log(jsonRes);
+        // const jsonRes=await res.json;
+        // console.log(jsonRes);
         setQuestList(res.data.problems);
         console.log(quesList);
         setprob(quesList[0]);

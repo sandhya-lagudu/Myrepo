@@ -1,30 +1,29 @@
-<tbody>
-            {
-              arr.map((prob)=>{
-                return(
-                <tr className="h-20" data-index={id}>
-              <td className="border border-slate-300">1 </td>
-              <td className="border border-slate-300">{prob.Title}</td>
-              <td className="border border-slate-300">{prob.Difficulty}</td>
-            </tr>
-              )})
-            }
-          </tbody>
-
-
-
-<tr>
-              <th scope="row" class="border-collapse border border-slate-400">Dennis</th>
-              <td class="border-collapse border border-slate-400">Web accessibility</td>
-              <td class="border-collapse border border-slate-400">45</td>
-            </tr>
-            <tr>
-              <th scope="row" class="border-collapse border border-slate-400">Sarah</th>
-              <td class="border-collapse border border-slate-400">JavaScript frameworks</td>
-              <td class="border-collapse border border-slate-400">29</td>
-            </tr>
-            <tr>
-              <th scope="row" class="border-collapse border border-slate-400">Karen</th>
-              <td class="border-collapse border border-slate-400">Web performance</td>
-              <td class="border-collapse border border-slate-400">36</td>
-            </tr>
+ <div className="flex items-center justify-center">
+        <form className="h-screen flex flex-col justify-center w-4/12">
+          <h1>Login to your account</h1>
+          <br />
+          <input
+            type="text"
+            name="uname"
+            id="uname"
+            placeholder="UserName"
+            // onChange={e=>{setUserName(e.target.value)}}
+            // value={user.lname}
+          />
+          <br />
+          
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Password"
+            // onChange={e=>{setPassword(e.target.value)}}
+            // value={user.password}
+          />
+          <br />
+          
+          <button>
+            Register
+          </button>
+        </form>
+      </div>

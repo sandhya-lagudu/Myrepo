@@ -13,8 +13,9 @@ export function CurProblem(){
     const location=useLocation();
     const problem=location.state;
     const [lang,setLang] = useState('cpp');
-    const [inp,setInp]=useState(`//Input here to run and check`);
+    const [inp,setInp]=useState("This is inp");
     const [out,setOut]=useState(`Output will appear here`);
+    const [verdict,setVerdict]=useState(`Here is the verdict`);
     const [code, setCode] = useState(`#include <iostream> 
     using namespace std;
     // Define the main function
@@ -30,15 +31,39 @@ export function CurProblem(){
         // Return 0 to indicate successful execution
         return 0;  
     }`);
-    const sendCode=async ()=>{
+
+    const url=`http://localhost:8080/viewProblem/${problem._id}/run`;
+    const submitUrl=`http://localhost:8080/viewProblem/${problem._id}/submit`;
+    
+    const sendCode=async (funcUrl)=>{
       const payload={
         lang,
         code,
         inp
       };
       try{
-        const {responseFromBackend} = await Axios.post(`http://localhost:8080/viewProblem/${problem._id}/run`.payload);
-        setOut(responseFromBackend.output);
+        // console.log(inp);
+        const {data} = await Axios.post(`${funcUrl}`,payload);
+        // console.log(data.output);
+        console.log(data.output);
+        setOut(data.output);
+      }
+      catch(error){
+        console.log(error.response);
+      }
+    };
+
+    const sendCodeSubmit=async (funcUrl)=>{
+      const payload={
+        lang,
+        code
+      };
+      try{
+        // console.log(inp);
+        const {data} = await Axios.post(`${funcUrl}`,payload);
+        // console.log(data.output);
+        // console.log(data.output);
+        setVerdict(data.verdict);
       }
       catch(error){
         console.log(error.response);
@@ -56,7 +81,7 @@ export function CurProblem(){
     <br />
     <p className="leading-relaxed">{problem.problemDescription}</p>
     <br />
-    <h3>Input:</h3>
+    <h3>Sample Input:</h3>
     
      <pre className="code-badge-pre bg-slate-500 text-wrap">
       <code className="hljs text-white">
@@ -67,7 +92,7 @@ export function CurProblem(){
 
   
     <br />
-    <h3>Output:</h3>
+    <h3>Sample Output:</h3>
     <pre className="code-badge-pre bg-slate-500 text-wrap">
       <code className="hljs text-white">
         {problem.testcases[0].output}
@@ -102,10 +127,10 @@ export function CurProblem(){
           />
         </div>
         <div className="space-x-4">
-        <button type="button" onClick={sendCode} className="text-center mt-4 bg-gradient-to-br from-pink-500 to-orange-400 hover:from-pink-600 hover:to-orange-500 focus:outline-none text-white font-medium rounded-lg text-sm px-5 py-2.5">
+        <button type="button" onClick={()=>{sendCode(url)}} className="text-center mt-4 bg-gradient-to-br from-pink-500 to-orange-400 hover:from-pink-600 hover:to-orange-500 focus:outline-none text-white font-medium rounded-lg text-sm px-5 py-2.5">
           Run
         </button>
-        <button type="button" className="text-center mt-4 bg-gradient-to-br from-pink-500 to-orange-400 hover:from-pink-600 hover:to-orange-500 focus:outline-none text-white font-medium rounded-lg text-sm px-5 py-2.5">
+        <button type="button" onClick={()=>{sendCodeSubmit(submitUrl)}} className="text-center mt-4 bg-gradient-to-br from-pink-500 to-orange-400 hover:from-pink-600 hover:to-orange-500 focus:outline-none text-white font-medium rounded-lg text-sm px-5 py-2.5">
           Submit
         </button>
         </div>
@@ -113,17 +138,26 @@ export function CurProblem(){
   </div>
   <div className="container pl-72 py-10 items-center">
     <div className="container content-evenly">
-  <h3>Input:</h3>
-  <input
-            type="text"
+  <h3>Custom Input:</h3>
+  <textarea
+            rows={15}
+            cols={110}
+            type="textbox"
             // value={this.state.value}
             onChange={e=>{setInp(e.target.value)}}
          />
     <br />
-    <h3>Output:</h3>
-    <pre className="code-badge-pre bg-slate-500 w-1/2">
-      <code className="hljs text-white">
+    <h3>Custom Output:</h3>
+    <pre className="code-badge-pre w-1/2">
+      <code className="hljs">
         {out}
+      </code>
+    </pre>
+    <br />
+    <h3>Verdict:</h3>
+    <pre className="code-badge-pre w-1/2">
+      <code className="hljs">
+        {verdict}
       </code>
     </pre>
     </div>
