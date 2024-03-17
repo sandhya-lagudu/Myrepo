@@ -41,7 +41,7 @@ export function Login(){
           .post(url, request)
           .then(res => {
             console.log(res);
-            if(res.data.message==="Good"){
+            if(res.data.message==="You have successfully loggedIn"){
             // localStorage.setItem("jwtToken", res.data.token);
             navigate("/problemlist");
             }
@@ -55,11 +55,12 @@ export function Login(){
       };
     return(
         <>
-         <div className="flex items-center justify-center">
+         <div className="flex items-center justify-center bg-violet-200">
         <form className="h-screen flex flex-col justify-center w-4/12" onSubmit={handleSubmit}>
-          <h1>Login to your account</h1>
+          <h1 className="text-2xl font-mono">Login to your account</h1>
           <br />
           <input
+            className="rounded-md text-xl"
             type="text"
             name="uname"
             id="uname"
@@ -70,6 +71,7 @@ export function Login(){
           <br />
           
           <input
+            className="rounded-md text-xl"
             type="password"
             name="password"
             id="password"
@@ -79,7 +81,7 @@ export function Login(){
           />
           <br />
           
-          <button type="submit">
+          <button class="bg-violet-500 py-1 px-1 rounded-xl text-xl shadow-2xl shadow-violet-950" type="submit">
             Login
           </button>
         </form>

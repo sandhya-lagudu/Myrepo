@@ -50,17 +50,19 @@ export function CurProblem(){
       }
       catch(error){
         console.log(error.response);
+        // setOut("Compilation error");
       }
     };
 
     const sendCodeSubmit=async (funcUrl)=>{
-      const payload={
+      const payloadSubmit={
         lang,
         code
       };
       try{
-        // console.log(inp);
-        const {data} = await Axios.post(`${funcUrl}`,payload);
+        // console.log(lang);
+        // console.log(code);
+        const {data} = await Axios.post(`${funcUrl}`,payloadSubmit);
         // console.log(data.output);
         // console.log(data.output);
         setVerdict(data.verdict);
@@ -71,7 +73,7 @@ export function CurProblem(){
     };
     return (
       <>
-    <div className="flex-horizontal pt-0 pl-20 bg-red-50">
+    <div className="flex-horizontal pt-0 pl-20 bg-violet-200">
 
 <div className="flex px-10 max-w-screen-xl aspect-video items-stretch">
   <div className="container border-collapse place-items-center px-10 py-24 max-w-screen-sm">
@@ -81,10 +83,10 @@ export function CurProblem(){
     <br />
     <p className="leading-relaxed">{problem.problemDescription}</p>
     <br />
-    <h3>Sample Input:</h3>
+    <h3 className="text-md font-mono">Sample Input:</h3>
     
-     <pre className="code-badge-pre bg-slate-500 text-wrap">
-      <code className="hljs text-white">
+     <pre className="code-badge-pre text-wrap">
+      <code className="hljs">
          {problem.testcases[0].input} 
         
       </code>
@@ -92,9 +94,9 @@ export function CurProblem(){
 
   
     <br />
-    <h3>Sample Output:</h3>
-    <pre className="code-badge-pre bg-slate-500 text-wrap">
-      <code className="hljs text-white">
+    <h3 className="text-md font-mono">Sample Output:</h3>
+    <pre className="code-badge-pre text-wrap">
+      <code className="hljs">
         {problem.testcases[0].output}
       </code>
     </pre>
@@ -102,14 +104,15 @@ export function CurProblem(){
   
   <div className="max-w-screen-sm px-10 py-10">
   <div className="col-sm-8">
-                <select className="form-control" id="languages" onChange={(e)=>setLang(e.target.value)}>
-                  <option value="C">C</option>
+                <select className="form-control rounded-md" id="languages" onChange={(e)=>setLang(e.target.value)}>
+                  <option value="c">C</option>
                   <option value="cpp" selected="">C++</option>
                   <option value="java">Java</option>
-                  <option value="pypy3">Python 3</option>
+                  <option value="py">Python 3</option>
                 </select>
               </div>
-  <div className="bg-gray-100 shadow-md w-full max-w-lg pt-10 items-stretch" style={{ width: '800px', height: '600px', overflowY: 'auto' }}>
+              <br />
+  <div className="bg-gray-100 shadow-md w-full max-w-lg pt-10 items-stretch rounded-xl" style={{ width: '800px', height: '600px', overflowY: 'auto' }}>
           <Editor
             value={code}
             onValueChange={code => setCode(code)}
@@ -126,11 +129,12 @@ export function CurProblem(){
             }}
           />
         </div>
+        <br />
         <div className="space-x-4">
-        <button type="button" onClick={()=>{sendCode(url)}} className="text-center mt-4 bg-gradient-to-br from-pink-500 to-orange-400 hover:from-pink-600 hover:to-orange-500 focus:outline-none text-white font-medium rounded-lg text-sm px-5 py-2.5">
+        <button type="button" onClick={()=>{sendCode(url)}} class="bg-violet-500 py-1.5 px-1.5 rounded-xl text-xl shadow-2xl shadow-violet-950">
           Run
         </button>
-        <button type="button" onClick={()=>{sendCodeSubmit(submitUrl)}} className="text-center mt-4 bg-gradient-to-br from-pink-500 to-orange-400 hover:from-pink-600 hover:to-orange-500 focus:outline-none text-white font-medium rounded-lg text-sm px-5 py-2.5">
+        <button type="button" onClick={()=>{sendCodeSubmit(submitUrl)}} class="bg-violet-500 py-1.5 px-1.5 rounded-xl text-xl shadow-2xl shadow-violet-950">
           Submit
         </button>
         </div>
@@ -140,6 +144,7 @@ export function CurProblem(){
     <div className="container content-evenly">
   <h3>Custom Input:</h3>
   <textarea
+  className="rounded-xl"
             rows={15}
             cols={110}
             type="textbox"

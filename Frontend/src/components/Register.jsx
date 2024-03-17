@@ -11,7 +11,8 @@ export function Register(){
     const [password,setPassword]=useState("");
     const url=`http://localhost:8080/register`;
     const navigate=useNavigate();
-    const sendCode=async (funcUrl)=>{
+    const sendCode=async (event)=>{
+      event.preventDefault();
         const payload={
           firstName,
         lastName,
@@ -21,11 +22,12 @@ export function Register(){
         password
         };
         try{
-          const {data} = await Axios.post(`${funcUrl}`,payload);
-          // if(data.message!=undefined){
-          //   navigate("/login");
-          // }
+          const {data} = await Axios.post(`${url}`,payload);
           console.log(data);
+          // if(data.message!=undefined){
+            navigate("/login");
+          // }
+          // console.log(data);
         }
         catch(error){
           console.log(error.response);
@@ -33,11 +35,12 @@ export function Register(){
       };
     return (
         <>
-        <div className="flex items-center justify-center">
-        <form className="h-screen flex flex-col justify-center w-4/12">
-          <h1>Create your account</h1>
+        <div className="flex items-center justify-center bg-violet-200">
+        <form className="h-screen flex flex-col justify-center w-4/12" onSubmit={sendCode}>
+          <h1 className="text-2xl font-mono">Create your account</h1>
           <br />
           <input
+          className="rounded-md text-xl"
             type="text"
             name="fname"
             id="fname"
@@ -48,6 +51,7 @@ export function Register(){
           <br />
           
           <input
+          className="rounded-md text-xl"
             type="text"
             name="lname"
             id="lname"
@@ -57,6 +61,7 @@ export function Register(){
           />
           <br />
           <input
+          className="rounded-md text-xl"
             type="text"
             name="uname"
             id="uname"
@@ -67,6 +72,7 @@ export function Register(){
           <br />
           
           <input
+          className="rounded-md text-xl"
             type="email"
             name="email"
             id="email"
@@ -77,6 +83,7 @@ export function Register(){
           <br />
           
           <input
+          className="rounded-md text-xl"
             type="phone"
             name="phone"
             id="phone"
@@ -87,6 +94,7 @@ export function Register(){
           <br />
           
           <input
+          className="rounded-md text-xl"
             type="password"
             name="password"
             id="password"
@@ -96,7 +104,7 @@ export function Register(){
           />
           <br />
           
-          <button onClick={()=>{sendCode(url)}}>
+          <button class="bg-violet-500 py-1 px-1 rounded-xl text-xl shadow-2xl shadow-violet-950" type="submit">
             Register
           </button>
         </form>
