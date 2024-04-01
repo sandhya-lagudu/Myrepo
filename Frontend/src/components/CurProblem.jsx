@@ -32,8 +32,8 @@ export function CurProblem(){
         return 0;  
     }`);
 
-    const url=`http://localhost:8080/viewProblem/${problem._id}/run`;
-    const submitUrl=`http://localhost:8080/viewProblem/${problem._id}/submit`;
+    const url=`${import.meta.env.BACKEND_URL}/viewProblem/${problem._id}/run`;
+    const submitUrl=`${import.meta.env.BACKEND_URL}/viewProblem/${problem._id}/submit`;
     
     const sendCode=async (funcUrl)=>{
       const payload={

@@ -8,7 +8,7 @@ export function Login(){
     const [check,setCheck]=useState(0);
     // console.log(check);
     const navigate=useNavigate();
-    const url=`http://localhost:8080/login`;
+    const url=`${import.meta.env.BACKEND_URL}/login`;
     
     // const checkUser=()=>{
     //     const payload={

@@ -14,7 +14,7 @@ export function Problems() {
     }, []);
     const navigate = useNavigate();
     const getQuesList = async event => {
-      await Axios.get("http://localhost:8080/problemList")
+      await Axios.get(`${import.meta.env.BACKEND_URL}/problemList`)
       .then(async res => {
         // const jsonRes=await res.json;
         // console.log(jsonRes);
